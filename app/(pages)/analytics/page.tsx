@@ -42,7 +42,6 @@ export default function AnalyticsPage() {
     <div className="space-y-8">
       <h1 className="text-2xl font-semibold text-zinc-100">Analytics</h1>
 
-      {/* KPI principal */}
       <div className="rounded-lg border border-zinc-800 bg-zinc-900 p-6">
         <p className="text-sm text-zinc-400">Monto total en oportunidades</p>
         <p className="mt-2 text-4xl font-semibold text-zinc-100">
@@ -50,20 +49,17 @@ export default function AnalyticsPage() {
         </p>
       </div>
 
-      {/* Métricas secundarias */}
       <div className="grid gap-4 sm:grid-cols-3">
         <StatCard label="Clientes" value={clientIds.length} />
         <StatCard label="Productos" value={productIds.length} />
         <StatCard label="Oportunidades" value={totalOpportunities} />
       </div>
 
-      {/* Estado del pipeline */}
       <div className="grid gap-4 sm:grid-cols-2">
         <StatCard label="Oportunidades abiertas" value={openCount} />
         <StatCard label="Oportunidades cerradas" value={closedCount} />
       </div>
 
-      {/* Roadmap */}
       <div className="rounded-lg border border-zinc-800 bg-zinc-900 p-4 text-sm text-zinc-400">
         <p className="mb-2 font-medium text-zinc-300">Próximamente</p>
 
