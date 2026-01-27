@@ -3,21 +3,16 @@
 import { useEffect } from "react";
 import { useOpportunitiesStore } from "@/store/opportunities.store";
 import { useShallow } from "zustand/react/shallow";
-import { OpportunityForm,  } from "@/components";
+import { OpportunityForm } from "@/components";
 
 export default function OpportunitiesPage() {
-  const { hydrated, hydrate, allIds, byId } = useOpportunitiesStore(
+  const { hydrated, allIds, byId } = useOpportunitiesStore(
     useShallow((s) => ({
       hydrated: s.hydrated,
-      hydrate: s.hydrate,
       allIds: s.allIds,
       byId: s.byId,
-    }))
+    })),
   );
-
-  useEffect(() => {
-    if (!hydrated) hydrate();
-  }, [hydrated, hydrate]);
 
   if (!hydrated) return <div>Cargando...</div>;
 
@@ -41,9 +36,7 @@ export default function OpportunitiesPage() {
                 key={id}
                 className="rounded-md border border-zinc-800 bg-zinc-900 p-3"
               >
-                <div className="font-medium text-zinc-100">
-                  {opp.title}
-                </div>
+                <div className="font-medium text-zinc-100">{opp.title}</div>
                 <div className="text-sm text-zinc-400">
                   {opp.products.length} productos · ${opp.totalAmount}
                 </div>
