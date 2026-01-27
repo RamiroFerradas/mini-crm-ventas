@@ -11,6 +11,12 @@
     "moduleResolution": "bundler",
     "strict": true,
     "noEmit": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "esModuleInterop": true,
     "types": [
       "react",
       "react-dom"
@@ -21,13 +27,6 @@
         "app/*"
       ]
     },
-    "allowJs": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "ignoreDeprecations": "6.0",
-    "incremental": true,
-    "esModuleInterop": true,
     "plugins": [
       {
         "name": "next"
@@ -36,10 +35,11 @@
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    "**/*.mts",
+    "**/*.ts",
+    "**/*.tsx"
   ],
   "exclude": [
     "node_modules"

@@ -18,7 +18,7 @@ export const useProductsStore = createEntityStore<
   load: loadProductsFromDb,
   save: saveProductsToDb,
 
-  getContext: () => ({}),
+  getContext: () => null,
 
   create: (input) => {
     const now = new Date().toISOString();
