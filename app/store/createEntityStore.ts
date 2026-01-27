@@ -1,9 +1,6 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
-/* =========================
-   TIPOS
-========================= */
 
 export type EntityStoreState<T, CreateInput> = {
   byId: Record<string, T>;
@@ -22,9 +19,6 @@ export type CreateEntityStoreOptions<T, CreateInput, Ctx> = {
   create: (input: CreateInput, ctx: Ctx) => T;
 };
 
-/* =========================
-   FACTORY
-========================= */
 
 export function createEntityStore<T extends { id: string }, CreateInput, Ctx>(
   options: CreateEntityStoreOptions<T, CreateInput, Ctx>,

@@ -2,10 +2,6 @@ import { createEntityStore } from "@/store/createEntityStore";
 import { loadProductsFromDb, saveProductsToDb } from "@/db/persistence";
 import type { Product, ProductCreateInput } from "@/models";
 
-/**
- * Para productos no necesitamos contexto,
- * así que usamos un objeto vacío.
- */
 type ProductsContext = void;
 
 export const useProductsStore = createEntityStore<

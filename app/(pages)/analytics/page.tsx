@@ -4,78 +4,76 @@ import { useClientsStore } from "@/store/clients.store";
 import { useProductsStore } from "@/store/products.store";
 import { useOpportunitiesStore } from "@/store/opportunities.store";
 import { useShallow } from "zustand/react/shallow";
+import { StatCard } from "@/components";
 
 export default function AnalyticsPage() {
-  const { clientsIds } = useClientsStore(
+  const { clientIds } = useClientsStore(
     useShallow((s) => ({
-      clientsIds: s.allIds,
-    }))
+      clientIds: s.allIds,
+    })),
   );
 
   const { productIds } = useProductsStore(
     useShallow((s) => ({
       productIds: s.allIds,
-    }))
+    })),
   );
 
   const { oppIds, oppById } = useOpportunitiesStore(
     useShallow((s) => ({
       oppIds: s.allIds,
       oppById: s.byId,
-    }))
+    })),
   );
 
   const totalOpportunities = oppIds.length;
 
   const totalAmount = oppIds.reduce((sum, id) => {
-    const o = oppById[id];
-    return sum + (o?.totalAmount ?? 0);
+    return sum + (oppById[id]?.totalAmount ?? 0);
   }, 0);
 
   const openCount = oppIds.filter(
-    (id) => oppById[id]?.status === "open"
+    (id) => oppById[id]?.status === "open",
   ).length;
 
   const closedCount = totalOpportunities - openCount;
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-xl font-semibold">Analytics</h1>
+    <div className="space-y-8">
+      <h1 className="text-2xl font-semibold text-zinc-100">Analytics</h1>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Clientes" value={clientsIds.length} />
-        <StatCard label="Productos" value={productIds.length} />
-        <StatCard label="Oportunidades" value={totalOpportunities} />
-        <StatCard label="Monto total" value={`$${totalAmount}`} />
+      {/* KPI principal */}
+      <div className="rounded-lg border border-zinc-800 bg-zinc-900 p-6">
+        <p className="text-sm text-zinc-400">Monto total en oportunidades</p>
+        <p className="mt-2 text-4xl font-semibold text-zinc-100">
+          ${totalAmount}
+        </p>
       </div>
 
+      {/* Métricas secundarias */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        <StatCard label="Clientes" value={clientIds.length} />
+        <StatCard label="Productos" value={productIds.length} />
+        <StatCard label="Oportunidades" value={totalOpportunities} />
+      </div>
+
+      {/* Estado del pipeline */}
       <div className="grid gap-4 sm:grid-cols-2">
         <StatCard label="Oportunidades abiertas" value={openCount} />
         <StatCard label="Oportunidades cerradas" value={closedCount} />
       </div>
 
-      <div className="rounded border p-4 text-sm text-zinc-500">
-        Próximamente:
-        <ul className="list-disc ml-4 mt-2 space-y-1">
+      {/* Roadmap */}
+      <div className="rounded-lg border border-zinc-800 bg-zinc-900 p-4 text-sm text-zinc-400">
+        <p className="mb-2 font-medium text-zinc-300">Próximamente</p>
+
+        <ul className="ml-4 list-disc space-y-1">
           <li>Gráficos de evolución</li>
           <li>Embudo de ventas</li>
           <li>Facturación mensual</li>
           <li>Conversión por cliente</li>
         </ul>
       </div>
-    </div>
-  );
-}
-
-/* ========================
-   UI helpers
-======================== */
-
-function StatCard({ label, value }: { label: string; value: number | string }) {
-  return (
-    <div className="rounded border bg-white p-4">
-      <div className="text-sm text-zinc-500">{label}</div>
-      <div className="mt-1 text-2xl font-semibold">{value}</div>
     </div>
   );
 }
