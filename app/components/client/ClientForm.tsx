@@ -8,62 +8,53 @@ type ClientFormValues = {
   email: string;
 };
 
-export function ClientForm() {
-  const addClient = useClientsStore((s) => s.addOne);
+type Props = {
+  clientId?: string;
+  onFinish?: () => void;
+};
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<ClientFormValues>({
+export function ClientForm({ clientId, onFinish }: Props) {
+  const { addOne, updateOne, byId } = useClientsStore();
+
+  const client = clientId ? byId[clientId] : undefined;
+
+  const { register, handleSubmit, reset } = useForm<ClientFormValues>({
     defaultValues: {
-      name: "",
-      email: "",
+      name: client?.name ?? "",
+      email: client?.email ?? "",
     },
   });
 
   const onSubmit = (data: ClientFormValues) => {
-    addClient({
-      name: data.name,
-      email: data.email,
-    });
+    if (client) {
+      updateOne({ ...client, ...data });
+    } else {
+      addOne(data);
+    }
 
     reset();
+    onFinish?.();
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex gap-2 items-start">
-      <div className="flex flex-col">
-        <input
-          {...register("name", { required: "Nombre requerido" })}
-          placeholder="Nombre"
-          className="border px-2 py-1 rounded"
-        />
-        {errors.name && (
-          <span className="text-red-500 text-xs">{errors.name.message}</span>
-        )}
-      </div>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-3 rounded-lg border border-zinc-800 bg-zinc-900 p-4"
+    >
+      <input
+        {...register("name", { required: true })}
+        placeholder="Nombre"
+        className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-100"
+      />
 
-      <div className="flex flex-col">
-        <input
-          {...register("email", {
-            required: "Email requerido",
-            pattern: {
-              value: /^\S+@\S+$/i,
-              message: "Email inválido",
-            },
-          })}
-          placeholder="Email"
-          className="border px-2 py-1 rounded"
-        />
-        {errors.email && (
-          <span className="text-red-500 text-xs">{errors.email.message}</span>
-        )}
-      </div>
+      <input
+        {...register("email", { required: true })}
+        placeholder="Email"
+        className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-100"
+      />
 
-      <button type="submit" className="bg-black text-white px-3 py-1 rounded">
-        Agregar
+      <button className="rounded-md bg-blue-600 px-4 py-2 text-white">
+        {client ? "Guardar cambios" : "Crear cliente"}
       </button>
     </form>
   );

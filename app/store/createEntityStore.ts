@@ -1,6 +1,7 @@
+import { fakeApi, FakeApiMode } from "@/lib";
+import { getSocket } from "@/lib/socket";
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-
 
 export type EntityStoreState<T, CreateInput> = {
   byId: Record<string, T>;
@@ -9,6 +10,8 @@ export type EntityStoreState<T, CreateInput> = {
   hydrate: () => Promise<void>;
   addOne: (input: CreateInput) => void;
   updateOne: (item: T) => void;
+  updatePartial: (id: string, patch: Partial<T>) => void;
+  deleteOne: (id: string) => void;
 };
 
 export type CreateEntityStoreOptions<T, CreateInput, Ctx> = {
@@ -18,8 +21,7 @@ export type CreateEntityStoreOptions<T, CreateInput, Ctx> = {
   getContext: () => Ctx | null;
   create: (input: CreateInput, ctx: Ctx) => T;
 };
-
-
+const FAKE_API_MODE: FakeApiMode = "fail";
 export function createEntityStore<T extends { id: string }, CreateInput, Ctx>(
   options: CreateEntityStoreOptions<T, CreateInput, Ctx>,
 ) {
@@ -54,15 +56,31 @@ export function createEntityStore<T extends { id: string }, CreateInput, Ctx>(
         const ctx = options.getContext();
         const entity = options.create(input, ctx!);
 
-        const { byId, allIds } = get();
-        if (byId[entity.id]) return;
+        const prevState = get();
 
         set({
-          byId: { ...byId, [entity.id]: entity },
-          allIds: [...allIds, entity.id],
+          byId: { ...prevState.byId, [entity.id]: entity },
+          allIds: [...prevState.allIds, entity.id],
         });
 
-        void options.save(Object.values(get().byId));
+        const commit = async () => {
+          try {
+            await fakeApi(entity, FAKE_API_MODE);
+
+            getSocket().emit("opportunity:update", {
+              id: entity.id,
+              data: entity,
+            });
+
+            await options.save(Object.values(get().byId));
+          } catch (err) {
+            console.error("Rollback addOne:", err);
+
+            set(prevState);
+          }
+        };
+
+        void commit();
       },
 
       updateOne(item) {
@@ -74,6 +92,73 @@ export function createEntityStore<T extends { id: string }, CreateInput, Ctx>(
         });
 
         void options.save(Object.values(get().byId));
+      },
+
+      deleteOne(id) {
+        const prevState = get();
+        if (!prevState.byId[id]) return;
+
+        const next = { ...prevState.byId };
+        delete next[id];
+
+        set({
+          byId: next,
+          allIds: prevState.allIds.filter((x) => x !== id),
+        });
+
+        const commit = async () => {
+          try {
+            await fakeApi(id, FAKE_API_MODE);
+
+            await options.save(Object.values(next));
+          } catch (err) {
+            console.error("Rollback deleteOne:", err);
+
+            set(prevState);
+          }
+        };
+
+        void commit();
+      },
+
+      updatePartial(id, patch) {
+        const { byId } = get();
+        const current = byId[id];
+        if (!current) return;
+
+        const prev = current;
+
+        const updated = {
+          ...current,
+          ...patch,
+          updatedAt: new Date().toISOString(),
+        };
+
+        // ✅ Optimistic UI
+        set({
+          byId: { ...byId, [id]: updated },
+        });
+
+        const commit = async () => {
+          try {
+            await fakeApi(updated, FAKE_API_MODE);
+
+            getSocket().emit("opportunity:update", {
+              id,
+              data: updated,
+            });
+
+            await options.save(Object.values(get().byId));
+          } catch (err) {
+            console.error("Rollback updatePartial:", err);
+
+            set({
+              byId: { ...get().byId, [id]: prev },
+            });
+          }
+        };
+
+        void commit();
       },
     })),
   );

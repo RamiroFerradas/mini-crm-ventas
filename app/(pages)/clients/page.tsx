@@ -13,12 +13,13 @@ export default function ClientsPage() {
   );
 
   if (!hydrated) {
-    return <div>Cargando clientes...</div>;
+    return <div className="p-6">Cargando clientes...</div>;
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-xl font-semibold">Clientes</h1>
+    <div className="mx-auto max-w-3xl space-y-6 p-6">
+      <h1 className="text-2xl font-semibold text-zinc-100">Clientes</h1>
+
       <ClientForm />
       <ClientList />
     </div>
