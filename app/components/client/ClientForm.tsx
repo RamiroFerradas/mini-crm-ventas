@@ -14,7 +14,7 @@ type Props = {
 };
 
 export function ClientForm({ clientId, onFinish }: Props) {
-  const { addOne, updateOne, byId } = useClientsStore();
+  const { addOne, updatePartial, byId } = useClientsStore();
 
   const client = clientId ? byId[clientId] : undefined;
 
@@ -27,7 +27,7 @@ export function ClientForm({ clientId, onFinish }: Props) {
 
   const onSubmit = (data: ClientFormValues) => {
     if (client) {
-      updateOne({ ...client, ...data });
+      updatePartial(client.id, data);
     } else {
       addOne(data);
     }
@@ -38,8 +38,8 @@ export function ClientForm({ clientId, onFinish }: Props) {
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
       className="space-y-3 rounded-lg border border-zinc-800 bg-zinc-900 p-4"
+      onSubmit={handleSubmit(onSubmit)}
     >
       <input
         {...register("name", { required: true })}

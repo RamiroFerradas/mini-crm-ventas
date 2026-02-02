@@ -4,6 +4,7 @@ import "@/globals.css";
 import { Header } from "./components";
 import { AppHydrator } from "./components/AppHydrator";
 import { Providers } from "./providers";
+import { useSyncLifecycle } from "./hooks/useSyncLifecycle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

@@ -41,5 +41,6 @@ export type OpportunityCreateInput = {
   products: {
     productId: string;
     quantity: number;
+    durationMonths?: number;
   }[];
 };

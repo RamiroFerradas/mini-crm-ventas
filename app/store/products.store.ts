@@ -1,4 +1,4 @@
-import { createEntityStore } from "@/store/createEntityStore";
+import { createEntityStore } from "@/store/entity/createEntityStore";
 import { loadProductsFromDb, saveProductsToDb } from "@/db/persistence";
 import type { Product, ProductCreateInput } from "@/models";
 
@@ -10,12 +10,9 @@ export const useProductsStore = createEntityStore<
   ProductsContext
 >({
   entity: "product",
-
   load: loadProductsFromDb,
   save: saveProductsToDb,
-
   getContext: () => null,
-
   create: (input) => {
     const now = new Date().toISOString();
 

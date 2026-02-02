@@ -11,7 +11,7 @@ export function AppHydrator() {
 
   const productsHydrated = useProductsStore((s) => s.hydrated);
   const hydrateProducts = useProductsStore((s) => s.hydrate);
-  
+
   const opportunitiesHydrated = useOpportunitiesStore((s) => s.hydrated);
   const hydrateOpportunities = useOpportunitiesStore((s) => s.hydrate);
 

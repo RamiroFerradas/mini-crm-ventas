@@ -4,16 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { SyncStatusIndicator } from "../ui";
+import { useSyncLifecycle } from "@/hooks/useSyncLifecycle";
 
 export function Header() {
   const pathname = usePathname();
+  useSyncLifecycle();
 
   const linkClass = (href: string, exact = false) =>
     clsx(
       "px-3 py-1 rounded-md text-sm font-medium transition-colors",
       (exact ? pathname === href : pathname.startsWith(href))
         ? "bg-zinc-800 text-white"
-        : "text-zinc-300 hover:bg-zinc-800 hover:text-white"
+        : "text-zinc-300 hover:bg-zinc-800 hover:text-white",
     );
 
   return (

@@ -5,12 +5,14 @@ import {
   removeSyncItem,
   updateSyncItem,
 } from "./syncQueueRepo";
+import { fakeApi } from "@/lib";
 
 export async function processSyncQueue() {
   const { setSyncing, setError, setPendingCount } =
     useSyncStatusStore.getState();
 
   setSyncing(true);
+  setError(undefined); // limpiamos al arrancar
 
   try {
     const items = await getPendingSyncItems();
@@ -18,7 +20,7 @@ export async function processSyncQueue() {
 
     for (const item of items) {
       try {
-        await sendToApi(item.entity, item.action, item.payload);
+        await fakeApi(item.payload, "fail"); // 👈 forzado para test
         await removeSyncItem(item.id);
       } catch (err) {
         await updateSyncItem({
@@ -28,7 +30,7 @@ export async function processSyncQueue() {
         });
 
         setError(String(err));
-        break;
+        break; // 👈 cortamos, queda en error
       }
     }
   } finally {

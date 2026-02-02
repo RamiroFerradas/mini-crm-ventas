@@ -1,24 +1,15 @@
-import { createEntityStore } from "@/store/createEntityStore";
 import { useProductsStore } from "@/store/products.store";
 import type { Opportunity, OpportunityCreateInput } from "@/models";
 import {
   loadOpportunitiesFromDb,
   saveOpportunitiesToDb,
 } from "@/db/persistence";
-type OpportunityContext = {
-  productsById: Record<
-    string,
-    {
-      id: string;
-      price: number;
-    }
-  >;
-};
+import { createEntityStore } from "./entity/createEntityStore";
 
 export const useOpportunitiesStore = createEntityStore<
   Opportunity,
   OpportunityCreateInput,
-  OpportunityContext
+  null
 >({
   entity: "opportunity",
   load: loadOpportunitiesFromDb,
@@ -40,13 +31,20 @@ export const useOpportunitiesStore = createEntityStore<
         productId: p.productId,
         quantity: p.quantity,
         price: product.price,
+        type: product.type,
+        durationMonths: p.durationMonths,
       };
     });
 
-    const totalAmount = enrichedProducts.reduce(
-      (sum, p) => sum + p.price * p.quantity,
-      0,
-    );
+    const totalAmount = enrichedProducts.reduce((sum, p) => {
+      const base = p.price * p.quantity;
+
+      if (p.type === "membership") {
+        return sum + base * (p.durationMonths ?? 1);
+      }
+
+      return sum + base;
+    }, 0);
 
     return {
       id: crypto.randomUUID(),

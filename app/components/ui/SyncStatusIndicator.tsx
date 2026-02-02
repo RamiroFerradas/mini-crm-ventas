@@ -9,27 +9,38 @@ export function SyncStatusIndicator() {
   return (
     <div
       className={clsx(
-        "flex items-center gap-2 text-xs px-3 py-1 rounded-md",
-        "bg-zinc-100 text-zinc-800"
+        "flex items-center gap-2 rounded-md border px-3 py-1 text-xs font-medium",
+        !online && "border-red-300 bg-red-50 text-red-700",
+        online && syncing && "border-yellow-300 bg-yellow-50 text-yellow-700",
+        online &&
+          !syncing &&
+          pendingCount === 0 &&
+          "border-green-300 bg-green-50 text-green-700",
+        pendingCount > 0 && "border-blue-300 bg-blue-50 text-blue-700",
       )}
     >
-      {!online && <span className="text-red-500">● Offline</span>}
+      {/* OFFLINE */}
+      {!online && <span>● Offline</span>}
 
+      {/* SYNCING */}
       {online && syncing && (
-        <span className="text-yellow-600 animate-pulse">Sincronizando…</span>
+        <span className="animate-pulse">Sincronizando…</span>
       )}
 
-      {online && !syncing && pendingCount === 0 && (
-        <span className="text-green-600">✓ Sincronizado</span>
-      )}
+      {/* SYNCED */}
+      {online && !syncing && pendingCount === 0 && <span>✓ Sincronizado</span>}
 
-      {pendingCount > 0 && (
-        <span className="text-blue-600">
+      {/* PENDING */}
+      {pendingCount > 0 && !syncing && (
+        <span>
           {pendingCount} pendiente{pendingCount > 1 ? "s" : ""}
         </span>
       )}
 
-      {lastError && <span className="text-red-600">⚠ Error</span>}
+      {/* ERROR */}
+      {lastError && (
+        <span className="ml-1 font-normal opacity-80">⚠ Error</span>
+      )}
     </div>
   );
 }

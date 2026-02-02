@@ -1,6 +1,6 @@
-import { createEntityStore } from "@/store/createEntityStore";
 import { loadClientsFromDb, saveClientsToDb } from "@/db/persistence";
 import type { Client } from "@/models";
+import { createEntityStore } from "./entity";
 
 type ClientInput = {
   name: string;
@@ -20,7 +20,7 @@ export const useClientsStore = createEntityStore<
 
   getContext: () => undefined,
 
-  create: (input) => ({
+  create: (input: ClientInput) => ({
     id: crypto.randomUUID(),
     name: input.name,
     email: input.email,
