@@ -19,25 +19,16 @@ export function SyncStatusIndicator() {
         pendingCount > 0 && "border-blue-300 bg-blue-50 text-blue-700",
       )}
     >
-      {/* OFFLINE */}
       {!online && <span>● Offline</span>}
-
-      {/* SYNCING */}
       {online && syncing && (
         <span className="animate-pulse">Sincronizando…</span>
       )}
-
-      {/* SYNCED */}
       {online && !syncing && pendingCount === 0 && <span>✓ Sincronizado</span>}
-
-      {/* PENDING */}
       {pendingCount > 0 && !syncing && (
         <span>
           {pendingCount} pendiente{pendingCount > 1 ? "s" : ""}
         </span>
       )}
-
-      {/* ERROR */}
       {lastError && (
         <span className="ml-1 font-normal opacity-80">⚠ Error</span>
       )}

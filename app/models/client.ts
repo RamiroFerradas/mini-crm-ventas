@@ -4,6 +4,7 @@ export interface Client {
   email: string;
   createdAt: string;
   status: "active" | "inactive";
+  avatarUrl?: string;
 }
 
 export type ClientCreateInput = {

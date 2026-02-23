@@ -4,11 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { SyncStatusIndicator } from "../ui";
-import { useSyncLifecycle } from "@/hooks/useSyncLifecycle";
 
 export function Header() {
   const pathname = usePathname();
-  useSyncLifecycle();
 
   const linkClass = (href: string, exact = false) =>
     clsx(

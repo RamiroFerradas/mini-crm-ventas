@@ -14,7 +14,6 @@ export function useSyncLifecycle() {
     }
 
     const handleOnline = () => {
-      console.log("hola");
       setOnline(true);
       processSyncQueue();
     };

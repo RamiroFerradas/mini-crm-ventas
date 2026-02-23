@@ -13,7 +13,7 @@ interface SyncStatusState {
 }
 
 export const useSyncStatusStore = create<SyncStatusState>((set) => ({
-  online: typeof navigator !== "undefined" ? navigator.onLine : true,
+  online: true, // valor estable para SSR
   syncing: false,
   pendingCount: 0,
   lastError: undefined,

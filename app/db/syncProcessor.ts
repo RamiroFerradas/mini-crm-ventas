@@ -1,4 +1,3 @@
-import { sendToApi } from "@/services";
 import { useSyncStatusStore } from "@/store";
 import {
   getPendingSyncItems,
