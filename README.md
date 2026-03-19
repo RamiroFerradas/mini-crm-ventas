@@ -1,5 +1,25 @@
 # mini-crm-ventas
 
+## Cómo correr el proyecto
+
+El proyecto tiene dos procesos independientes que hay que levantar por separado.
+
+**1. Servidor de WebSockets**
+```bash
+pnpm socket
+```
+Levanta el servidor de socket.io en `http://localhost:3001`. Necesario para recibir actualizaciones de oportunidades en tiempo real.
+
+**2. Frontend**
+```bash
+pnpm dev
+```
+Levanta la app Next.js en `http://localhost:3000`.
+
+> Ambos procesos deben estar corriendo al mismo tiempo para que el realtime funcione.
+
+---
+
 ## Documentación mínima de implementación
 
 ### Estado global y normalización
