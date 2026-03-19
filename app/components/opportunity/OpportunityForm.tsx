@@ -139,6 +139,7 @@ export function OpportunityForm() {
                   required: true,
                 })}
                 className="flex-1 rounded-md border border-zinc-700 bg-zinc-800 px-2 py-1 text-zinc-100"
+                aria-label="Producto"
               >
                 <option value="">Producto</option>
                 {products.map((p) => (
@@ -151,23 +152,29 @@ export function OpportunityForm() {
               <input
                 type="number"
                 min={1}
+                step={1}
                 {...register(`products.${index}.quantity`, {
                   valueAsNumber: true,
                   min: 1,
+                  required: true,
                 })}
                 className="w-24 rounded-md border border-zinc-700 bg-zinc-800 px-2 py-1 text-zinc-100"
+                aria-label="Cantidad"
               />
 
+              {/* Duración solo si es membresía */}
               {selectedProduct?.type === "membership" && (
                 <input
                   type="number"
                   min={1}
+                  step={1}
                   placeholder="Meses"
                   {...register(`products.${index}.durationMonths`, {
                     required: true,
                     min: 1,
                   })}
                   className="w-28 rounded-md border border-zinc-700 bg-zinc-800 px-2 py-1 text-zinc-100"
+                  aria-label="Duración (meses)"
                 />
               )}
 

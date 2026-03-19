@@ -17,6 +17,7 @@ export const CLIENTS_SEED: Client[] = [
   },
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function seeds(server: any) {
   CLIENTS_SEED.forEach((c) => {
     server.create("client", c);

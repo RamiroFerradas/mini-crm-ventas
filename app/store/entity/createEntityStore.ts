@@ -77,6 +77,13 @@ export function createEntityStore<T extends { id: string }, CreateInput, Ctx>(
             console.error("Rollback addOne:", err);
 
             set(prevState);
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(
+                new CustomEvent("optimistic:rollback", {
+                  detail: { type: "add", entity },
+                })
+              );
+            }
           }
         };
 
@@ -115,6 +122,13 @@ export function createEntityStore<T extends { id: string }, CreateInput, Ctx>(
             console.error("Rollback deleteOne:", err);
 
             set(prevState);
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(
+                new CustomEvent("optimistic:rollback", {
+                  detail: { type: "delete", id },
+                })
+              );
+            }
           }
         };
 
@@ -155,6 +169,13 @@ export function createEntityStore<T extends { id: string }, CreateInput, Ctx>(
             set({
               byId: { ...get().byId, [id]: prev },
             });
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(
+                new CustomEvent("optimistic:rollback", {
+                  detail: { type: "update", id, prev },
+                }),
+              );
+            }
           }
         };
 

@@ -1,11 +1,7 @@
-import React from 'react'
-
-type Props = {}
-
-const Badge = (props: Props) => {
+export function Badge({ children }: { children: React.ReactNode }) {
   return (
-    <div>Badge</div>
-  )
+    <span className="inline-flex items-center rounded px-2 py-0.5 text-xs font-medium">
+      {children}
+    </span>
+  );
 }
-
-export default Badge

@@ -40,8 +40,9 @@ export function Header() {
             Analytics
           </Link>
         </nav>
-
-        <SyncStatusIndicator />
+        <div className="flex items-center">
+          <SyncStatusIndicator />
+        </div>
       </div>
     </header>
   );

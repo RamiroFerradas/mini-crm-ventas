@@ -48,9 +48,18 @@ export function ClientForm({ clientId, onFinish }: Props) {
       />
 
       <input
-        {...register("email", { required: true })}
+        {...register("email", {
+          required: true,
+          pattern: {
+            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            message: "Email inválido",
+          },
+        })}
         placeholder="Email"
         className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-100"
+        type="email"
+        autoComplete="email"
+        aria-label="Email"
       />
 
       <button className="rounded-md bg-blue-600 px-4 py-2 text-white">

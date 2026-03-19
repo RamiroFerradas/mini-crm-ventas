@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/globals.css";
 import { Header } from "./components";
+import { OptimisticRollbackToast } from "@/components/ui";
 import { AppHydrator } from "./components/AppHydrator";
 import { Providers } from "./providers";
 import { GlobalClientEffects } from "./GlobalClientEffects";
@@ -40,6 +41,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Suspense fallback={<div className="h-14" />}>
           <Header />
         </Suspense>
+
+        <OptimisticRollbackToast />
 
         <Suspense fallback={null}>
           <Providers>{children}</Providers>

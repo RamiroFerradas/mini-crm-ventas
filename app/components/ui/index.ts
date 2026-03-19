@@ -4,3 +4,4 @@ export * from './EmptyState';
 export * from './Input';
 export * from './Loader';
 export * from './SyncStatusIndicator';
+export * from "./OptimisticRollbackToast";
