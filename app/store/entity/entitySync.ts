@@ -1,9 +1,8 @@
 import { addSyncItem } from "@/db/syncQueueRepo";
-import { fakeApi, FakeApiMode } from "@/lib";
+import { fakeApi } from "@/lib";
 import { getSocket } from "@/lib/socket";
+import { useSyncStatusStore } from "@/store";
 import { SyncAction, SyncEntity } from "@/db";
-
-const FAKE_API_MODE: FakeApiMode = "success";
 
 type EntityWithId = { id: string };
 
@@ -17,7 +16,7 @@ export async function syncCreate<T extends EntityWithId>(
   }
 
   try {
-    await fakeApi(entity, FAKE_API_MODE);
+    await fakeApi(entity, useSyncStatusStore.getState().apiMode);
 
     getSocket().emit("opportunity:update", {
       id: entity.id,
@@ -39,7 +38,7 @@ export async function syncUpdate<T extends EntityWithId>(
   }
 
   try {
-    await fakeApi(entity, FAKE_API_MODE);
+    await fakeApi(entity, useSyncStatusStore.getState().apiMode);
 
     getSocket().emit("opportunity:update", {
       id: entity.id,

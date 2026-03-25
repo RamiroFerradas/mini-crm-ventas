@@ -27,7 +27,6 @@ export function initOpportunitiesSocket() {
     if (store.byId[id]) {
       store.updatePartial(id, data);
     } else {
-      // nueva oportunidad creada por otro cliente
       store.addOne(data);
     }
   });

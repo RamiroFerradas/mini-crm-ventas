@@ -4,16 +4,13 @@ import { CLIENTS_SEED } from "@/lib/mirage/seeds";
 import { loadClientsFromDb } from "@/db";
 
 export async function getClientById(id: string): Promise<Client | null> {
-  // 1. Prioridad: DB local (IndexedDB)
   const localClients = await loadClientsFromDb();
   const local = localClients.find((c) => c.id === id);
   if (local) return local;
 
-  // 2. Luego: API mock (Mirage)
   try {
     return await apiClient.get<Client>(`/api/clients/${id}`);
   } catch {
-    // 3. Fallback final: seed
     return getClientFromMock(id);
   }
 }

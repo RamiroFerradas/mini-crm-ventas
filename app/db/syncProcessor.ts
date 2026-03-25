@@ -7,11 +7,11 @@ import {
 import { fakeApi } from "@/lib";
 
 export async function processSyncQueue() {
-  const { setSyncing, setError, setPendingCount } =
+  const { setSyncing, setError, setPendingCount, apiMode } =
     useSyncStatusStore.getState();
 
   setSyncing(true);
-  setError(undefined); // limpiamos al arrancar
+  setError(undefined);
 
   try {
     const items = await getPendingSyncItems();
@@ -19,7 +19,7 @@ export async function processSyncQueue() {
 
     for (const item of items) {
       try {
-        await fakeApi(item.payload, "fail"); // 👈 forzado para test
+        await fakeApi(item.payload, apiMode);
         await removeSyncItem(item.id);
       } catch (err) {
         await updateSyncItem({
@@ -29,7 +29,7 @@ export async function processSyncQueue() {
         });
 
         setError(String(err));
-        break; // 👈 cortamos, queda en error
+        break;
       }
     }
   } finally {

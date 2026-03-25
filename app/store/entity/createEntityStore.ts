@@ -1,5 +1,6 @@
-import { fakeApi, FakeApiMode } from "@/lib";
+import { fakeApi } from "@/lib";
 import { getSocket } from "@/lib/socket";
+import { useSyncStatusStore } from "@/store";
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
@@ -21,7 +22,6 @@ export type CreateEntityStoreOptions<T, CreateInput, Ctx> = {
   getContext: () => Ctx | null;
   create: (input: CreateInput, ctx: Ctx) => T;
 };
-const FAKE_API_MODE: FakeApiMode = "fail";
 export function createEntityStore<T extends { id: string }, CreateInput, Ctx>(
   options: CreateEntityStoreOptions<T, CreateInput, Ctx>,
 ) {
@@ -65,7 +65,7 @@ export function createEntityStore<T extends { id: string }, CreateInput, Ctx>(
 
         const commit = async () => {
           try {
-            await fakeApi(entity, FAKE_API_MODE);
+            await fakeApi(entity, useSyncStatusStore.getState().apiMode);
 
             getSocket().emit("opportunity:update", {
               id: entity.id,
@@ -81,7 +81,7 @@ export function createEntityStore<T extends { id: string }, CreateInput, Ctx>(
               window.dispatchEvent(
                 new CustomEvent("optimistic:rollback", {
                   detail: { type: "add", entity },
-                })
+                }),
               );
             }
           }
@@ -115,7 +115,7 @@ export function createEntityStore<T extends { id: string }, CreateInput, Ctx>(
 
         const commit = async () => {
           try {
-            await fakeApi(id, FAKE_API_MODE);
+            await fakeApi(id, useSyncStatusStore.getState().apiMode);
 
             await options.save(Object.values(next));
           } catch (err) {
@@ -126,7 +126,7 @@ export function createEntityStore<T extends { id: string }, CreateInput, Ctx>(
               window.dispatchEvent(
                 new CustomEvent("optimistic:rollback", {
                   detail: { type: "delete", id },
-                })
+                }),
               );
             }
           }
@@ -148,14 +148,13 @@ export function createEntityStore<T extends { id: string }, CreateInput, Ctx>(
           updatedAt: new Date().toISOString(),
         };
 
-        // ✅ Optimistic UI
         set({
           byId: { ...byId, [id]: updated },
         });
 
         const commit = async () => {
           try {
-            await fakeApi(updated, FAKE_API_MODE);
+            await fakeApi(updated, useSyncStatusStore.getState().apiMode);
 
             getSocket().emit("opportunity:update", {
               id,

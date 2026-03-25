@@ -1,5 +1,9 @@
 import type { Client } from "@/models";
 
+type SeedServerLike = {
+  create: (model: "client", data: Client) => void;
+};
+
 export const CLIENTS_SEED: Client[] = [
   {
     id: "1",
@@ -17,8 +21,7 @@ export const CLIENTS_SEED: Client[] = [
   },
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function seeds(server: any) {
+export function seeds(server: SeedServerLike) {
   CLIENTS_SEED.forEach((c) => {
     server.create("client", c);
   });

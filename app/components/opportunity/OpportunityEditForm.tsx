@@ -25,7 +25,7 @@ export function OpportunityEditForm({ id, initial, onCancel }: Props) {
 
   const productsCatalog = useProductsStore(
     useShallow((s) => s.allIds.map((id) => s.byId[id])),
-  ); // Product[]
+  );
 
   const { register, control, handleSubmit, watch } = useForm({
     defaultValues: initial,
@@ -71,13 +71,11 @@ export function OpportunityEditForm({ id, initial, onCancel }: Props) {
       onSubmit={handleSubmit(onSubmit)}
       className="mt-4 space-y-3 rounded-md border border-zinc-700 bg-zinc-800 p-4"
     >
-      {/* Título */}
       <input
         {...register("title", { required: true })}
         className="w-full rounded border border-zinc-600 bg-zinc-900 px-2 py-1 text-zinc-100"
       />
 
-      {/* Productos */}
       {fields.map((field, index) => {
         const selectedProduct = productsCatalog.find(
           (p) => p.id === watch(`products.${index}.productId`),
@@ -106,7 +104,6 @@ export function OpportunityEditForm({ id, initial, onCancel }: Props) {
               className="w-20 rounded border border-zinc-600 bg-zinc-900 px-2 py-1 text-zinc-100"
             />
 
-            {/* Membresía → duración */}
             {selectedProduct?.type === "membership" && (
               <input
                 type="number"
@@ -131,7 +128,6 @@ export function OpportunityEditForm({ id, initial, onCancel }: Props) {
         );
       })}
 
-      {/* Acciones */}
       <div className="flex justify-between pt-2">
         <button
           type="button"

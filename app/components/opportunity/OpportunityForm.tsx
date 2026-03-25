@@ -70,10 +70,6 @@ export function OpportunityForm() {
 
   const needsApproval = totalAmount > APPROVAL_THRESHOLD;
 
-  /* =========================
-     SUBMIT
-  ========================= */
-
   const onSubmit = (data: OpportunityFormValues) => {
     if (data.products.length === 0) return;
     addOpportunity(data);
@@ -162,7 +158,6 @@ export function OpportunityForm() {
                 aria-label="Cantidad"
               />
 
-              {/* Duración solo si es membresía */}
               {selectedProduct?.type === "membership" && (
                 <input
                   type="number"
@@ -194,7 +189,6 @@ export function OpportunityForm() {
         Total: <span className="font-medium">${totalAmount}</span>
       </div>
 
-      {/* Aprobación gerente */}
       {needsApproval && (
         <label className="flex items-center gap-2 text-sm text-zinc-200">
           <input

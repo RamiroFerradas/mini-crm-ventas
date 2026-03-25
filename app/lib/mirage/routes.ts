@@ -1,42 +1,74 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export function routes(this: any) {
+type RequestLike = {
+  params: Record<string, string>;
+  requestBody: string;
+};
+
+type ModelLike = {
+  attrs?: unknown;
+  update: (attrs: unknown) => unknown;
+  destroy: () => unknown;
+};
+
+type CollectionLike = {
+  all: () => unknown;
+  find: (id: string) => ModelLike | undefined;
+  create: (attrs: unknown) => ModelLike;
+};
+
+type SchemaLike = {
+  clients: CollectionLike;
+  opportunities: CollectionLike;
+  products: CollectionLike;
+};
+
+type RouteHandler = (schema: SchemaLike, request: RequestLike) => unknown;
+
+type MirageServerLike = {
+  namespace: string;
+  get: (path: string, handler: RouteHandler) => void;
+  post: (path: string, handler: RouteHandler) => void;
+  put: (path: string, handler: RouteHandler) => void;
+  del: (path: string, handler: RouteHandler) => void;
+  passthrough: (path?: string) => void;
+};
+
+export function routes(this: MirageServerLike) {
   this.namespace = "/api";
 
-  // CLIENTES
-  this.get("/clients", (schema: any) => {
+  this.get("/clients", (schema) => {
     return schema.clients.all();
   });
 
-  this.get("/clients/:id", (schema: any, request: any) => {
+  this.get("/clients/:id", (schema, request) => {
     return schema.clients.find(request.params.id);
   });
 
-  this.post("/clients", (schema: any, request: any) => {
+  this.post("/clients", (schema, request) => {
     const attrs = JSON.parse(request.requestBody);
     return schema.clients.create(attrs);
   });
 
-  this.put("/clients/:id", (schema: any, request: any) => {
+  this.put("/clients/:id", (schema, request) => {
     const attrs = JSON.parse(request.requestBody);
     return schema.clients.find(request.params.id)?.update(attrs);
   });
 
-  this.del("/clients/:id", (schema: any, request: any) => {
+  this.del("/clients/:id", (schema, request) => {
     return schema.clients.find(request.params.id)?.destroy();
   });
-  // OPORTUNIDADES
-  this.get("/opportunities", (schema: any) => {
+
+  this.get("/opportunities", (schema) => {
     return schema.opportunities.all();
   });
 
-  this.get("/opportunities/:id", (schema: any, request: any) => {
+  this.get("/opportunities/:id", (schema, request) => {
     return schema.opportunities.find(request.params.id);
   });
 
-  this.post("/opportunities", (schema: any, request: any) => {
+  this.post("/opportunities", (schema, request) => {
     const attrs = JSON.parse(request.requestBody);
     const created = schema.opportunities.create(attrs);
-    // Simular evento realtime (solo en dev)
+
     if (window && window.dispatchEvent) {
       window.dispatchEvent(
         new CustomEvent("mirage:opportunity:created", {
@@ -47,7 +79,7 @@ export function routes(this: any) {
     return created;
   });
 
-  this.put("/opportunities/:id", (schema: any, request: any) => {
+  this.put("/opportunities/:id", (schema, request) => {
     const attrs = JSON.parse(request.requestBody);
     const updated = schema.opportunities.find(request.params.id)?.update(attrs);
     if (window && window.dispatchEvent) {
@@ -60,7 +92,7 @@ export function routes(this: any) {
     return updated;
   });
 
-  this.del("/opportunities/:id", (schema: any, request: any) => {
+  this.del("/opportunities/:id", (schema, request) => {
     const deleted = schema.opportunities.find(request.params.id)?.destroy();
     if (window && window.dispatchEvent) {
       window.dispatchEvent(
@@ -72,26 +104,27 @@ export function routes(this: any) {
     return deleted;
   });
 
-  // PRODUCTOS
-  this.get("/products", (schema: any) => {
+  this.get("/products", (schema) => {
     return schema.products.all();
   });
 
-  this.get("/products/:id", (schema: any, request: any) => {
+  this.get("/products/:id", (schema, request) => {
     return schema.products.find(request.params.id);
   });
 
-  this.post("/products", (schema: any, request: any) => {
+  this.post("/products", (schema, request) => {
     const attrs = JSON.parse(request.requestBody);
     return schema.products.create(attrs);
   });
 
-  this.put("/products/:id", (schema: any, request: any) => {
+  this.put("/products/:id", (schema, request) => {
     const attrs = JSON.parse(request.requestBody);
     return schema.products.find(request.params.id)?.update(attrs);
   });
 
-  this.del("/products/:id", (schema: any, request: any) => {
+  this.del("/products/:id", (schema, request) => {
     return schema.products.find(request.params.id)?.destroy();
   });
+
+  this.passthrough();
 }

@@ -13,7 +13,6 @@ io.on("connection", (socket) => {
   console.log("Cliente conectado", socket.id);
 
   socket.on("opportunity:update", (payload) => {
-    // reenviamos a todos menos al que emitió
     socket.broadcast.emit("opportunity:updated", payload);
   });
 
