@@ -21,13 +21,8 @@ export function initOpportunitiesSocket() {
 
   const socket = getSocket();
 
-  socket.on("opportunity:updated", ({ id, data }: OpportunitySocketPayload) => {
+  socket.on("opportunity:updated", ({ data }: OpportunitySocketPayload) => {
     const store = useOpportunitiesStore.getState() as OpportunitiesStoreState;
-
-    if (store.byId[id]) {
-      store.updatePartial(id, data);
-    } else {
-      store.addOne(data);
-    }
+    store.applyRemote(data);
   });
 }

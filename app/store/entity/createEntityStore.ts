@@ -13,6 +13,7 @@ export type EntityStoreState<T, CreateInput> = {
   updateOne: (item: T) => void;
   updatePartial: (id: string, patch: Partial<T>) => void;
   deleteOne: (id: string) => void;
+  applyRemote: (item: T) => void;
 };
 
 export type CreateEntityStoreOptions<T, CreateInput, Ctx> = {
@@ -133,6 +134,18 @@ export function createEntityStore<T extends { id: string }, CreateInput, Ctx>(
         };
 
         void commit();
+      },
+
+      applyRemote(item) {
+        const { byId, allIds } = get();
+        const isNew = !byId[item.id];
+
+        set({
+          byId: { ...byId, [item.id]: item },
+          allIds: isNew ? [...allIds, item.id] : allIds,
+        });
+
+        void options.save(Object.values(get().byId));
       },
 
       updatePartial(id, patch) {
