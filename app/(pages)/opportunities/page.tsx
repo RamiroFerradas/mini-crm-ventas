@@ -42,6 +42,7 @@ export default function OpportunitiesPage() {
         <ul className="space-y-2">
           {allIds.map((id) => {
             const opp = byId[id];
+            if (!opp) return null;
             const isEditing = editingId === id;
 
             return (
@@ -53,7 +54,7 @@ export default function OpportunitiesPage() {
                   <div>
                     <div className="font-medium text-zinc-100">{opp.title}</div>
                     <div className="text-sm text-zinc-400">
-                      {opp.products.length} productos · ${opp.totalAmount}
+                      {opp.products?.length ?? 0} productos · ${opp.totalAmount}
                     </div>
                   </div>
 

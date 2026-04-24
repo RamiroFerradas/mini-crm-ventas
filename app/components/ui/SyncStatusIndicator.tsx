@@ -24,6 +24,8 @@ export function SyncStatusIndicator() {
       </select>
 
       <div
+        aria-live="polite"
+        aria-atomic="true"
         className={clsx(
           "flex items-center gap-2 rounded-md border px-3 py-1 text-xs font-medium",
           !online && "border-red-300 bg-red-50 text-red-700",
@@ -35,12 +37,12 @@ export function SyncStatusIndicator() {
           pendingCount > 0 && "border-blue-300 bg-blue-50 text-blue-700",
         )}
       >
-        {!online && <span>● Offline</span>}
+        {!online && <span><span aria-hidden="true">● </span>Offline</span>}
         {online && syncing && (
           <span className="animate-pulse">Sincronizando…</span>
         )}
         {online && !syncing && pendingCount === 0 && (
-          <span>✓ Sincronizado</span>
+          <span><span aria-hidden="true">✓ </span>Sincronizado</span>
         )}
         {pendingCount > 0 && !syncing && (
           <span>
@@ -48,7 +50,7 @@ export function SyncStatusIndicator() {
           </span>
         )}
         {lastError && (
-          <span className="ml-1 font-normal opacity-80">⚠ Error</span>
+          <span className="ml-1 font-normal opacity-80"><span aria-hidden="true">⚠ </span>Error</span>
         )}
       </div>
     </div>

@@ -2,6 +2,12 @@
 
 import { useOpportunitiesStore } from "@/store/opportunities.store";
 
+const STATUS_LABEL: Record<"open" | "won" | "lost", string> = {
+  open: "Abierta",
+  won: "Ganada",
+  lost: "Perdida",
+};
+
 export function OpportunityList() {
   const { byId, allIds } = useOpportunitiesStore();
 
@@ -20,6 +26,7 @@ export function OpportunityList() {
               <h3 className="font-medium">{opp.title}</h3>
 
               <span
+                aria-label={`Estado: ${STATUS_LABEL[opp.status]}`}
                 className={`text-xs px-2 py-1 rounded ${
                   opp.status === "open"
                     ? "bg-blue-100 text-blue-700"
@@ -28,7 +35,7 @@ export function OpportunityList() {
                     : "bg-red-100 text-red-700"
                 }`}
               >
-                {opp.status}
+                {STATUS_LABEL[opp.status]}
               </span>
             </div>
 

@@ -18,6 +18,7 @@ export function OpportunityStatusBadge({
 
   return (
     <span
+      aria-label={`Estado: ${STATUS_LABEL[status]}`}
       className={`inline-block rounded px-2 py-0.5 text-xs font-medium text-white ${color}`}
     >
       {STATUS_LABEL[status]}

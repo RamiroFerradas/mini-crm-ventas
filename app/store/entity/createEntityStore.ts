@@ -26,6 +26,8 @@ export type CreateEntityStoreOptions<T, CreateInput, Ctx> = {
 export function createEntityStore<T extends { id: string }, CreateInput, Ctx>(
   options: CreateEntityStoreOptions<T, CreateInput, Ctx>,
 ) {
+  let hydrating = false;
+
   return create<EntityStoreState<T, CreateInput>>()(
     subscribeWithSelector((set, get) => ({
       byId: {},
@@ -33,24 +35,42 @@ export function createEntityStore<T extends { id: string }, CreateInput, Ctx>(
       hydrated: false,
 
       async hydrate() {
-        if (get().hydrated) return;
+        if (get().hydrated || hydrating) return;
         if (typeof window === "undefined") return;
 
-        const items = await options.load();
+        hydrating = true;
 
-        const byId: Record<string, T> = {};
-        const allIds: string[] = [];
+        try {
+          const items = await options.load();
 
-        for (const item of items) {
-          byId[item.id] = item;
-          allIds.push(item.id);
+          // Merge: DB aporta persistencia, memoria (socket) aporta frescura.
+          // Items que ya están en memoria conservan la versión en memoria (más reciente).
+          const current = get();
+          const mergedById: Record<string, T> = {};
+          const mergedAllIds: string[] = [];
+
+          // Primero los items de la DB
+          for (const item of items) {
+            mergedById[item.id] = current.byId[item.id] ?? item;
+            mergedAllIds.push(item.id);
+          }
+
+          // Luego los items que sólo están en memoria (llegaron por socket antes de hydrate)
+          for (const id of current.allIds) {
+            if (!mergedById[id]) {
+              mergedById[id] = current.byId[id];
+              mergedAllIds.push(id);
+            }
+          }
+
+          set({
+            byId: mergedById,
+            allIds: mergedAllIds,
+            hydrated: true,
+          });
+        } finally {
+          hydrating = false;
         }
-
-        set({
-          byId,
-          allIds,
-          hydrated: true,
-        });
       },
 
       addOne(input) {

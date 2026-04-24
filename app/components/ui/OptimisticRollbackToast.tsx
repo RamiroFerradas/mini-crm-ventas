@@ -17,7 +17,10 @@ export function OptimisticRollbackToast() {
   if (!error) return null;
 
   return (
-    <div className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded bg-red-600 px-4 py-2 text-white shadow-lg animate-fade-in">
+    <div
+      role="alert"
+      className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded bg-red-600 px-4 py-2 text-white shadow-lg animate-fade-in"
+    >
       {error}
     </div>
   );
