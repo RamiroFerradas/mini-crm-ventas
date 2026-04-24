@@ -20,7 +20,7 @@ export const useSyncStatusStore = create<SyncStatusState>((set) => ({
   syncing: false,
   pendingCount: 0,
   lastError: undefined,
-  apiMode: "random",
+  apiMode: "success",
 
   setOnline: (online) => set({ online }),
   setSyncing: (syncing) => set({ syncing }),
