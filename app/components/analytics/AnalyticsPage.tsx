@@ -42,9 +42,12 @@ export default function AnalyticsPageClient() {
     <div className="space-y-8">
       <h1 className="text-2xl font-semibold text-zinc-100">Estadísticas </h1>
 
-      <div className="rounded-lg border border-zinc-800 bg-zinc-900 p-6">
-        <p className="text-sm text-zinc-400">Monto total en oportunidades</p>
-        <p className="mt-2 text-4xl font-semibold text-zinc-100">
+      <div
+        className="rounded-lg border border-zinc-800 bg-zinc-900 p-6"
+        aria-label={`Monto total en oportunidades: $${totalAmount.toLocaleString()}`}
+      >
+        <p aria-hidden="true" className="text-sm text-zinc-400">Monto total en oportunidades</p>
+        <p aria-hidden="true" className="mt-2 text-4xl font-semibold text-zinc-100">
           ${totalAmount}
         </p>
       </div>

@@ -25,21 +25,30 @@ export default function Dashboard() {
       <h1 className="text-2xl font-semibold text-zinc-100">Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="rounded-lg border border-zinc-800 bg-zinc-900 p-4">
-          <p className="text-sm text-zinc-400">Clientes</p>
-          <p className="text-2xl font-semibold text-zinc-100">{clientsCount}</p>
+        <div
+          className="rounded-lg border border-zinc-800 bg-zinc-900 p-4"
+          aria-label={`Clientes: ${clientsCount}`}
+        >
+          <p aria-hidden="true" className="text-sm text-zinc-400">Clientes</p>
+          <p aria-hidden="true" className="text-2xl font-semibold text-zinc-100">{clientsCount}</p>
         </div>
 
-        <div className="rounded-lg border border-zinc-800 bg-zinc-900 p-4">
-          <p className="text-sm text-zinc-400">Oportunidades</p>
-          <p className="text-2xl font-semibold text-zinc-100">
+        <div
+          className="rounded-lg border border-zinc-800 bg-zinc-900 p-4"
+          aria-label={`Oportunidades: ${opportunitiesCount}`}
+        >
+          <p aria-hidden="true" className="text-sm text-zinc-400">Oportunidades</p>
+          <p aria-hidden="true" className="text-2xl font-semibold text-zinc-100">
             {opportunitiesCount}
           </p>
         </div>
 
-        <div className="rounded-lg border border-zinc-800 bg-zinc-900 p-4">
-          <p className="text-sm text-zinc-400">Ingresos</p>
-          <p className="text-2xl font-semibold text-zinc-100">
+        <div
+          className="rounded-lg border border-zinc-800 bg-zinc-900 p-4"
+          aria-label={`Ingresos: $${totalRevenue.toLocaleString()}`}
+        >
+          <p aria-hidden="true" className="text-sm text-zinc-400">Ingresos</p>
+          <p aria-hidden="true" className="text-2xl font-semibold text-zinc-100">
             ${totalRevenue.toLocaleString()}
           </p>
         </div>
